@@ -8,6 +8,7 @@ async function bootstrap() {
   app.useGlobalPipes(new ValidationPipe());
   
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('API Documentation')
     .setDescription('API definition')
     .setVersion('1.0')
