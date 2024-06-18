@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, HttpCode, ParseIntPipe, HttpStatus } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
@@ -10,6 +10,7 @@ export class CoursesController {
   constructor(private readonly coursesService: CoursesService) {}
 
   @Post()
+  @HttpCode(201)
   @ApiBearerAuth()
   create(@Body() createCourseDto: CreateCourseDto) {
     return this.coursesService.create(createCourseDto);
@@ -20,9 +21,16 @@ export class CoursesController {
     return this.coursesService.findAll();
   }
 
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.coursesService.findOne(+id);
+  // }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.coursesService.findOne(+id);
+  getDetail(@Param('id', new ParseIntPipe({
+    errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE
+  })) id: number) {
+    return this.coursesService.findOne(id);
   }
 
   @Patch(':id')
